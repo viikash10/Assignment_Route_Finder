@@ -1,0 +1,118 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #e5e7ee;
+  padding: 40px;
+  color: rgb(12, 12, 12);
+  font-size: 22px;
+}
+
+.App-main {
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 768px) {
+ .App-header {
+    padding: 20px;
+  }
+
+ .App-main {
+    padding: 10px;
+  }
+
+ .form {
+    gap: 5px;
+  }
+
+  button {
+    padding: 8px 16px;
+  }
+}
+
+/* Media Query for Medium Screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+ .App-header {
+    padding: 30px;
+  }
+
+ .App-main {
+    padding: 15px;
+  }
+
+ .form {
+    gap: 8px;
+  }
+
+  button {
+    padding: 12px 24px;
+  }
+}
+
+/* Media Query for Large Screens */
+@media (min-width: 1025px) {
+ .App-header {
+    padding: 40px;
+  }
+
+ .App-main {
+    padding: 20px;
+  }
+
+ .form {
+    gap: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+  }
+}
+
+
+.Input-box {
+  position: absolute;
+  z-index: 1000; /* Ensures the input box stays on top */
+  background-color: #fff; /* Light background */
+  padding: 20px; /* Padding inside the box */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+  width: 80%; /* Adjust based on your needs */
+  max-width: 500px; /* Maximum width */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  top: 10%; /* Position relative to the viewport */
+}
+
+/* Make the input box responsive */
+@media (max-width: 600px) {
+ .Input-box {
+    width: 90%; /* Adjust for smaller screens */
+    top: 5%; /* Adjust positioning for smaller screens */
+  }
+}
+
+/* Draggable */
+.draggable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  
+}

@@ -1,0 +1,62 @@
+.main {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Stack children vertically */
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column; /* Stack form fields vertically */
+    gap: 10px;
+    align-items: stretch; /* Stretch items to fill available space */
+    padding: 2px;
+    width: 100%; /* Full width */
+    max-width: 400px; /* Max width for larger screens */
+    margin: 0 auto; /* Center the form */
+}
+
+.distance-field,
+.unit-field {
+    border-radius: 1px;
+    padding: 10px;
+    border: 1px solid rgb(90, 88, 88);
+    border-radius: 5px;
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding and border in element's total width */
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center; /* Center the button */
+    margin-top: 10px; /* Space below the fields */
+}
+
+.btn {
+    border-radius: 1px;
+    width: 100%; /* Full width */
+    padding: 10px; /* Slightly larger padding for better clickability */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    background-color: #36393b; /* Blue background */
+    color: white; /* White text */
+    border: none; /* No border */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+ .form-field {
+        padding: 10px; /* Increase padding for smaller screens */
+    }
+
+ .distance-field,
+ .unit-field {
+        font-size: 14px; /* Smaller font size for smaller screens */
+    }
+
+ .btn {
+        padding: 8px; /* Reduce padding for smaller screens */
+        font-size: medium;
+        font-weight: bold;
+    }
+
+}
