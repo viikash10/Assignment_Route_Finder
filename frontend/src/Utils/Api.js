@@ -121,10 +121,11 @@ const MapWithRoute = () => {
     
     // Trigger route update
     setRoute([]); // Clear previous route if any
+
     if (startPoint) {
       // Convert distance to degrees (approximate)
       const earthRadius = 6371; // Earth's radius in kilometers
-      const angularDistance = (distance/2) / earthRadius;
+      const angularDistance = (distance/2) / earthRadius; // since we need to cover half of the distance only as after that same distance needs to be cover to come back
 
       // Generate random angle in radians
       const randomAngle = Math.random() * 2 * Math.PI;
@@ -164,7 +165,7 @@ const MapWithRoute = () => {
         </form>
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
-        <MapContainer ref={mapRef} zoom={15} center={startPoint} whenCreated={setMap} style={{ height: '100vh', width: '100%' }}>
+        <MapContainer ref={mapRef} zoom={17} center={startPoint} whenCreated={setMap} style={{ height: '100vh', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
