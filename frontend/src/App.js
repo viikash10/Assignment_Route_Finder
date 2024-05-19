@@ -7,7 +7,7 @@ import L from 'leaflet'; // Import Leaflet directly for icon customization
 // import Draggable
 import Draggable from 'react-draggable'; 
 
-import RouteFinderForm from './components/RouteFinderForm';
+// import RouteFinderForm from './components/RouteFinderForm';
 import RouteResults from './components/RouteResults';
 import Test from './Utils/Api.js';
 
@@ -23,24 +23,6 @@ L.Icon.Default.mergeOptions({
 });
 function App() {
 
-  const mapRef = useRef(null);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (mapRef.current) {
-          mapRef.current.flyTo([latitude, longitude], 13);
-          // Adding a marker for the current location
-          const marker = new L.marker([latitude, longitude]).addTo(mapRef.current);
-          marker.bindPopup("<b>Your Location</b><br>Click to see details.").openPopup();
-        }
-      },
-      (error) => {
-        console.error("Error Code = " + error.code + " - " + error.message);
-      }
-    );
-  }, []);
 
   return (
     <div className="App">
@@ -48,28 +30,7 @@ function App() {
         <h1>Route Finder</h1>
       </header>
       <main>
-      {/* <MapContainer ref={mapRef} center={[40.7128, 74.0060]} zoom={13} style={{ height: "100vh", width: "100%" }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          />
-          {/* Other map layers and components */}
-        {/* </MapContainer>
-        
-        <Draggable className="draggable">
-            <div className='Input-box'>
-              <RouteFinderForm />
-            </div>
-          </Draggable> */}
           <Test/>
-          <Draggable className="draggable">
-            <div className='Input-box'>
-              <RouteFinderForm />
-            </div>
-    </Draggable>
-
-        {/* Route Result to be displayed on the map itself */}
-       <RouteResults />
       </main>
     </div>
   );

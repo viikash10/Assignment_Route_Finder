@@ -8,8 +8,6 @@ import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import Draggable from 'react-draggable';
-import RouteFinderForm from '../components/RouteFinderForm';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -20,64 +18,160 @@ L.Icon.Default.mergeOptions({
 const MapWithRoute = () => {
   const [route, setRoute] = useState([]);
   const [map, setMap] = useState(null);
-
-  const startPoint = [54.5200, 13.4050]; // Berlin
-  const endPoint = [43.8566, 2.3522]; // Paris
-
-  // App.js code
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
+  const [distance, setDistance] = useState(''); // Default distance in kilometers
+  const [unit, setUnit] = useState('km');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const mapRef = useRef(null);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (mapRef.current) {
-          mapRef.current.flyTo([latitude, longitude], 13);
-          // Adding a marker for the current location
-          const marker = new L.marker([latitude, longitude]).addTo(mapRef.current);
-          marker.bindPopup("<b>Your Location</b><br>Click to see details.").openPopup();
+    const fetchCurrentLocation = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setStartPoint([latitude, longitude]);
+          setEndPoint([latitude, longitude]);
+        },
+        (error) => {
+          console.error("Error Code = " + error.code + " - " + error.message);
+          // Handle errors, optionally retry fetching the location
+          if (error.code === error.PERMISSION_DENIED) {
+            // Inform the user or prompt them to enable location services
+          } else {
+            // Retry fetching the location after a delay (e.g., 5 seconds)
+            setTimeout(fetchCurrentLocation, 5000);
+          }
         }
-      },
-      (error) => {
-        console.error("Error Code = " + error.code + " - " + error.message);
-      }
-    );
+      );
+    };
+
+    fetchCurrentLocation();
   }, []);
 
   useEffect(() => {
-    const fetchRoute = async () => {
-      try {
-        const response = await axios.get('https://api.openrouteservice.org/v2/directions/driving-car', {
-          params: {
-            api_key: '5b3ce3597851110001cf62484c108c60eec4413aa187e0bf3d84a39c',
-            start: `${startPoint[1]},${startPoint[0]}`,
-            end: `${endPoint[1]},${endPoint[0]}`,
-            format: 'geojson',
-            profile: 'foot-walking'
-          }
-        });
-        const routeCoordinates = response.data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-        setRoute(routeCoordinates);
-      } catch (error) {
-        console.error('Error fetching the route:', error);
-      }
-    };
+    if (startPoint && distance<30 && unit === 'km') {
+      // Convert distance to degrees (approximate)
+      const earthRadius = 6371; // Earth's radius in kilometers
+      const angularDistance = (distance/2) / earthRadius;
 
-    fetchRoute();
-  }, []);
+      // Generate random angle in radians
+      const randomAngle = Math.random() * 2 * Math.PI;
+
+      // Calculate new endpoint coordinates using Haversine formula
+      const newEndLatitude = Math.asin(Math.sin(startPoint[0] * Math.PI / 180) * Math.cos(angularDistance) +
+        Math.cos(startPoint[0] * Math.PI / 180) * Math.sin(angularDistance) * Math.cos(randomAngle));
+      const newEndLongitude = (startPoint[1] * Math.PI / 180) + Math.atan2(Math.sin(randomAngle) * Math.sin(angularDistance) * Math.cos(startPoint[0] * Math.PI / 180),
+        Math.cos(angularDistance) - Math.sin(startPoint[0] * Math.PI / 180) * Math.sin(newEndLatitude));
+
+      // Convert back to degrees
+      setEndPoint([newEndLatitude * 180 / Math.PI, newEndLongitude * 180 / Math.PI]);
+    }
+  }, [startPoint, distance]);
+
+  useEffect(() => {
+    if (startPoint && endPoint) {
+      const fetchRoute = async () => {
+        try {
+          const response = await axios.get('https://api.openrouteservice.org/v2/directions/foot-walking', {
+            params: {
+              api_key: '5b3ce3597851110001cf62484c108c60eec4413aa187e0bf3d84a39c',
+              start: `${startPoint[1]},${startPoint[0]}`,
+              end: `${endPoint[1]},${endPoint[0]}`,
+              format: 'geojson',
+              profile: 'foot-walking'
+            }
+          });
+          const routeCoordinates = response.data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+          setRoute(routeCoordinates);
+        } catch (error) {
+          console.error('Error fetching the route:', error);
+        }
+      };
+
+      fetchRoute();
+    }
+  }, [startPoint, endPoint]);
+
+  const handleDistanceChange = (event) => {
+    setDistance(event.target.value);
+  };
+
+  const handleUnitChange = (event) => {
+    setUnit(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Validate distance
+    if (!distance) {
+      setErrorMessage('Please enter a distance.');
+      return;
+    } else if (unit === 'km' && distance > 30) {
+      setErrorMessage(alert('Maximum distance for walking is 30 kilometers.'));
+      return;
+    } else if (unit === 'mi' && distance > 19) {
+      setErrorMessage('Maximum distance for walking is 19 miles.');
+      return;
+    }
+
+    // Clear error message
+    setErrorMessage('');
+    
+    // Trigger route update
+    setRoute([]); // Clear previous route if any
+    if (startPoint) {
+      // Convert distance to degrees (approximate)
+      const earthRadius = 6371; // Earth's radius in kilometers
+      const angularDistance = (distance/2) / earthRadius;
+
+      // Generate random angle in radians
+      const randomAngle = Math.random() * 2 * Math.PI;
+
+      // Calculate new endpoint coordinates using Haversine formula
+      const newEndLatitude = Math.asin(Math.sin(startPoint[0] * Math.PI / 180) * Math.cos(angularDistance) +
+        Math.cos(startPoint[0] * Math.PI / 180) * Math.sin(angularDistance) * Math.cos(randomAngle));
+      const newEndLongitude = (startPoint[1] * Math.PI / 180) + Math.atan2(Math.sin(randomAngle) * Math.sin(angularDistance) * Math.cos(startPoint[0] * Math.PI / 180),
+        Math.cos(angularDistance) - Math.sin(startPoint[0] * Math.PI / 180) * Math.sin(newEndLatitude));
+
+      // Convert back to degrees
+      setEndPoint([newEndLatitude * 180 / Math.PI, newEndLongitude * 180 / Math.PI]);
+    }
+  };
 
   return (
-    <MapContainer  center={startPoint} zoom={6} whenCreated={setMap} style={{ height: '100vh', width: '100%' }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={startPoint} />
-      <Marker position={endPoint} />
-      {route.length > 0 && <Polyline positions={route} color="blue" />}
-     
-    </MapContainer>
+    startPoint && (
+      <div>
+        <form onSubmit={handleSubmit} className='form-field'>
+          <select id="unit" value={unit} onChange={handleUnitChange} className='unit-field'>
+            <option value="km">Kilometers</option>
+            <option value="mi">Miles</option>
+          </select>
+          <input
+            type="number"
+            id="distance"
+            placeholder='Enter Distance'
+            onChange={handleDistanceChange}
+            value={distance}
+            required
+            className='distance-field'
+          />
+          <div className='btn-container'>
+            <button type="submit" className="btn">Find Route</button>
+          </div>
+        </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <MapContainer ref={mapRef} zoom={15} center={startPoint} whenCreated={setMap} style={{ height: '100vh', width: '100%' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <Marker position={startPoint} />
+          {route.length > 0 && <Polyline positions={route} color="blue" dashArray="10, 10" />}
+        </MapContainer>
+      </div>
+    )
   );
 };
 

@@ -19,6 +19,10 @@ function RouteFinderForm() {
 
   return (
     <form onSubmit={handleSubmit} className='form-field'>
+     <select id="unit" value={unit} onChange={(e) => setUnit(e.target.value)} className='unit-field'>
+    <option value="km">Kilometers</option>
+    <option value="mi">Miles</option>
+  </select>
   <input
     type="number"
     id="distance"
@@ -28,10 +32,7 @@ function RouteFinderForm() {
     required
     className='distance-field'
   />
-  <select id="unit" value={unit} onChange={(e) => setUnit(e.target.value)} className='unit-field'>
-    <option value="km">Kilometers</option>
-    <option value="mi">Miles</option>
-  </select>
+ 
   <div className='btn-container'>
     <button type="submit" className="btn">Find Route</button>
   </div>
