@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import './Form-Style.css';
 
 // Fix icon issue with Leaflet in React
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -54,8 +55,7 @@ const MapWithRoute = () => {
     if (startPoint && distance<30 && unit === 'km') {
       // Convert distance to degrees (approximate)
       const earthRadius = 6371; // Earth's radius in kilometers
-      const angularDistance = (distance/2) / earthRadius;
-
+      const angularDistance = ((distance) / earthRadius)/2; //since we need to get half of the distance 
       // Generate random angle in radians
       const randomAngle = Math.random() * 2 * Math.PI;
 
@@ -109,7 +109,7 @@ const MapWithRoute = () => {
       setErrorMessage('Please enter a distance.');
       return;
     } else if (unit === 'km' && distance > 30) {
-      setErrorMessage(alert('Maximum distance for walking is 30 kilometers.'));
+      setErrorMessage('Maximum distance for walking is 30 kilometers.');
       return;
     } else if (unit === 'mi' && distance > 19) {
       setErrorMessage('Maximum distance for walking is 19 miles.');
@@ -143,6 +143,7 @@ const MapWithRoute = () => {
   return (
     startPoint && (
       <div>
+        <div className='Form-Style'>
         <form onSubmit={handleSubmit} className='form-field'>
           <select id="unit" value={unit} onChange={handleUnitChange} className='unit-field'>
             <option value="km">Kilometers</option>
@@ -161,6 +162,7 @@ const MapWithRoute = () => {
             <button type="submit" className="btn">Find Route</button>
           </div>
         </form>
+        </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <MapContainer ref={mapRef} zoom={15} center={startPoint} whenCreated={setMap} style={{ height: '100vh', width: '100%' }}>
           <TileLayer

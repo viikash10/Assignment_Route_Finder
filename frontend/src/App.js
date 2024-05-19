@@ -7,7 +7,7 @@ import L from 'leaflet'; // Import Leaflet directly for icon customization
 // import Draggable
 import Draggable from 'react-draggable'; 
 
-// import RouteFinderForm from './components/RouteFinderForm';
+import RouteFinderForm from './components/RouteFinderForm';
 import RouteResults from './components/RouteResults';
 import Test from './Utils/Api.js';
 
