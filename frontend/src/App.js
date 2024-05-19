@@ -9,15 +9,18 @@ import Draggable from 'react-draggable';
 
 import RouteFinderForm from './components/RouteFinderForm';
 import RouteResults from './components/RouteResults';
+import Test from './Utils/Api.js';
 
 // Customizing the default icon
-L.Marker.prototype.options.icon = L.icon({
-  iconUrl: 'path/to/icon.png', // Path to your custom icon
-  iconSize: [25, 41], // Size of the icon
-  iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-  popupAnchor: [-34, -41] // Point from which the popup should open relative to the iconAnchor
-});
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 function App() {
 
   const mapRef = useRef(null);
@@ -45,21 +48,25 @@ function App() {
         <h1>Route Finder</h1>
       </header>
       <main>
-      <MapContainer ref={mapRef} center={[40.7128, 74.0060]} zoom={13} style={{ height: "100vh", width: "100%" }}>
+      {/* <MapContainer ref={mapRef} center={[40.7128, 74.0060]} zoom={13} style={{ height: "100vh", width: "100%" }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           {/* Other map layers and components */}
-        </MapContainer>
+        {/* </MapContainer>
         
         <Draggable className="draggable">
             <div className='Input-box'>
               <RouteFinderForm />
             </div>
-          </Draggable>
-         
-        
+          </Draggable> */}
+          <Test/>
+          <Draggable className="draggable">
+            <div className='Input-box'>
+              <RouteFinderForm />
+            </div>
+    </Draggable>
 
         {/* Route Result to be displayed on the map itself */}
        <RouteResults />
