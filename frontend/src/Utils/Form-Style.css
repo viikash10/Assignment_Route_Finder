@@ -2,3 +2,34 @@
     width: 100%;
     height: auto;
 }
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    overflow: hidden; /* Ensure the map fits within the card */
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 70vh; /* Adjust height to fit within the card */
+    border-radius: 15px;
+  }
+  
+  @media (max-width: 768px) {
+    .map-container {
+      height: 50vh; /* Adjust height for tablets */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .map-container {
+      height: 40vh; /* Adjust height for mobile devices */
+    }
+  }
+  

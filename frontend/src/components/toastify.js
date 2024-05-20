@@ -1,12 +1,9 @@
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import './Form-Style.css';
+import '../Utils/Form-Style.css';
 
 // Toastify for Notifications 
 import { ToastContainer, toast } from 'react-toastify';
@@ -45,7 +42,7 @@ const MapWithRoute = () => {
         (error) => {
           console.error("Error Code = " + error.code + " - " + error.message);
           toast.error(`Error fetching location: ${error.message}`, {
-            position: "center",
+            position: "top-center",
           });
           if (error.code === error.PERMISSION_DENIED) {
             // Inform the user or prompt them to enable location services
@@ -85,38 +82,22 @@ const MapWithRoute = () => {
         try {
           const response = await axios.get('https://api.openrouteservice.org/v2/directions/foot-walking', {
             params: {
-              api_key: '5b3ce3597851110001cf62484c108c60eec4413aa187e0bf3d84a39c',
+              api_key: 'YOUR_API_KEY',
               start: `${startPoint[1]},${startPoint[0]}`,
               end: `${endPoint[1]},${endPoint[0]}`,
               format: 'geojson',
               profile: 'foot-walking'
             }
           });
-          if(distance <= 30 && unit === 'km' || distance <= 19 && unit === 'mi'){
-            const routeCoordinates = response.data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-            setRoute(routeCoordinates);
-          }
-          else{
-
-            if(distance > 30 && unit === 'km')
-            {setRoute([]);
-            toast.error(`Maximum distance for walking is 30 kilometers.`, {
-              position: "top-right",
-            })}
-            if(distance > 19 && unit === 'mi')
-              {
-                setRoute([]);
-                toast.error(`Maximum distance for walking is 19 miles.`, {
-                  position: "top-right",
-                })
-              }
-          }
-          
-         
+          const routeCoordinates = response.data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+          setRoute(routeCoordinates);
+          toast.success("Route fetched successfully!", {
+            position: "top-center",
+          });
         } catch (error) {
           console.error('Error fetching the route:', error);
           toast.error(`Error fetching route: ${error.message}`, {
-            position: "top-right",
+            position: "top-center",
           });
         }
       };
@@ -139,19 +120,19 @@ const MapWithRoute = () => {
     if (!distance) {
       setErrorMessage('Please enter a distance.');
       toast.error('Please enter a distance.', {
-        position: "top-right",
+        position: "top-center",
       });
       return;
     } else if (unit === 'km' && distance > 30) {
-      //setErrorMessage('Maximum distance for walking is 30 kilometers.');
+      setErrorMessage('Maximum distance for walking is 30 kilometers.');
       toast.error('Maximum distance for walking is 30 kilometers.', {
-        position: "top-right",
+        position: "top-center",
       });
       return;
     } else if (unit === 'mi' && distance > 19) {
-      //setErrorMessage('Maximum distance for walking is 19 miles.');
+      setErrorMessage('Maximum distance for walking is 19 miles.');
       toast.error('Maximum distance for walking is 19 miles.', {
-        position: "top-right",
+        position: "top-center",
       });
       return;
     }
@@ -159,8 +140,7 @@ const MapWithRoute = () => {
     // Clear error message
     setErrorMessage('');
     toast.success('Distance validated, fetching route...', {
-      position: "top-right",
-      setTimeout: 1000
+      position: "top-center",
     });
 
     // Trigger route update
@@ -226,4 +206,3 @@ const MapWithRoute = () => {
 };
 
 export default MapWithRoute;
-

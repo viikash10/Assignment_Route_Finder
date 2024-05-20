@@ -4,6 +4,8 @@ import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+
+
 // Fix icon issue with Leaflet in React
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -51,7 +53,7 @@ const MapWithRoute = () => {
 
       const response = await axios.get('https://api.openrouteservice.org/v2/directions/foot-walking', {
         params: {
-          api_key: '5b3ce3597851110001cf62484c108c60eec4413aa187e0bf3d84a39c',
+          api_key: 'YOUR_API_KEY',
           coordinates: coordinatesString,
           format: 'geojson',
           profile: 'foot-walking'
@@ -64,6 +66,9 @@ const MapWithRoute = () => {
       console.error('Error fetching the route:', error);
     }
   };
+
+
+  
 
   return (
     <div>

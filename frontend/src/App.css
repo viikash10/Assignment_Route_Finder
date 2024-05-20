@@ -6,7 +6,7 @@
   background-color: #e5e7ee;
   padding: 40px;
   color: rgb(12, 12, 12);
-  font-size: 22px;
+  font-size: 30px;
 }
 
 .App-main {
@@ -30,6 +30,7 @@ button {
 @media (max-width: 768px) {
  .App-header {
     padding: 20px;
+    font-size: 22px;
   }
 
  .App-main {
