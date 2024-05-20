@@ -85,7 +85,7 @@ const MapWithRoute = () => {
         try {
           const response = await axios.get('https://api.openrouteservice.org/v2/directions/foot-walking', {
             params: {
-              api_key: '5b3ce3597851110001cf62484c108c60eec4413aa187e0bf3d84a39c',
+              api_key: 'YOUR_API_KEY',
               start: `${startPoint[1]},${startPoint[0]}`,
               end: `${endPoint[1]},${endPoint[0]}`,
               format: 'geojson',
