@@ -7,6 +7,11 @@ This application finds it's usage in areas like US where most of the roads are u
 
 # For API_KEY - Refer https://openrouteservice.org/
 
+# Usage 
+
+1) Clone 
+2) Go to frontend 
+3) paste the API_KEY in Api.js file located in Utils Folder, for API_KEY Refer - https://openrouteservice.org/
 
 ## Tech Stack
 
