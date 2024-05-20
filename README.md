@@ -10,7 +10,7 @@ This application finds it's usage in areas like US where most of the roads are u
 
 ## Tech Stack
 
-**Client:** React, React-Leaflet
+**Client:** React.js, React-Leaflet, Toastify
 
-**Server:** Node, Axios, Open Source Route API
+**Server:** Node.js, Axios, Open Source Route API
 
